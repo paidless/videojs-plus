@@ -31,11 +31,46 @@ class ContextMenu extends Menu {
     return el;
   }
 
-  show(x, y) {
+  show(x, y, w, h) {
     super.show();
+
+    this.el_.append.style.width = '';
+    this.el_.append.style.height = '';
+    this.el_.style.width = '';
+    this.el_.style.height = '';
+
+    const width = this.el_.getBoundingClientRect().width;
+    const height = this.el_.getBoundingClientRect().height;
+
+    const posX = w - width;
+    const posY = h - height;
+
+    const calcX = () => {
+      if (x > posX) {
+        return (x - posX) * -1;
+      }
+      return '0';
+    }
+
+    const calcY = () => {
+      if (y > posY) {
+        return (y - posY) * -1;
+      }
+      return '0';
+    }
+
+    const marginTop = calcY();
+    const marginLeft = calcX();
 
     this.el_.style.top = y + 'px';
     this.el_.style.left = x + 'px';
+    this.el_.style.marginTop = marginTop + 'px';
+    this.el_.style.marginLeft = marginLeft + 'px';
+
+    this.el_.append.style.width = width + 'px';
+    this.el_.append.style.height = height + 'px';
+    this.el_.style.width = width + 'px';
+    this.el_.style.height = height + 'px';
   }
 
   onContextmenu(event) {
@@ -52,8 +87,10 @@ class ContextMenu extends Menu {
     ) {
       const x = pageX - rect.x;
       const y = pageY - rect.y;
+      const w = rect.width;
+      const h = rect.height;
 
-      this.show(x, y);
+      this.show(x, y, w, h);
     } else {
       this.hide();
     }
